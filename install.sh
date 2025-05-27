@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/bin/bash
 rm -rf ~/.pyenv
 rm -rf ~/.zprofile
 rm -rf ~/.zshrc*
