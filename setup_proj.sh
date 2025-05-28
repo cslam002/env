@@ -12,6 +12,8 @@ pip list
 pip install --upgrade pip
 pip install python-dotenv
 pip install django==5.2
+pip install django-debug-toolbar
+pip install psycopg2
 
 django-admin startproject bcre .
 python manage.py startapp pages

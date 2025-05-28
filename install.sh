@@ -9,6 +9,7 @@ sudo apt update
 sudo apt upgrade
 sudo apt install -y curl git zsh
 
+# for building python
 sudo apt install -y \
   build-essential \
   zlib1g-dev \
@@ -19,6 +20,19 @@ sudo apt install -y \
   libbz2-dev \
   liblzma-dev \
   tk-dev
+
+# progresql server and admin tool
+#
+## Install the public key for the repository (if not done previously):
+curl -fsS https://www.pgadmin.org/static/packages_pgadmin_org.pub | sudo gpg --dearmor -o /usr/share/keyrings/packages-pgadmin-org.gpg
+
+# Create the repository configuration file:
+sudo sh -c 'echo "deb [signed-by=/usr/share/keyrings/packages-pgadmin-org.gpg] https://ftp.postgresql.org/pub/pgadmin/pgadmin4/apt/$(lsb_release -cs) pgadmin4 main" > /etc/apt/sources.list.d/pgadmin4.list && apt update'
+
+sudo apt install -y \
+  postgresql \
+  pgadmin4
+
 
 echo $SHELL
 chsh -s $(which zsh)
@@ -54,12 +68,11 @@ echo 'eval "$(pyenv init - zsh)"' >> ~/.zprofile
 
 pyenv install 3.10.17
 pyenv install 3.11.12 
+pyenv install 3.12.10
 pyenv global 3.11.12
 
 # virtualenvwrapper : https://github.com/pyenv/pyenv-virtualenvwrapper
 git clone https://github.com/pyenv/pyenv-virtualenvwrapper.git $(pyenv root)/plugins/pyenv-virtualenvwrapper
-
-
 
 echo 'export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"' >> ~/.zshrc
 echo 'export WORKON_HOME=$HOME/.virtualenvs' >> ~/.zshrc
@@ -81,5 +94,4 @@ done
 source ~/.envsetup/setup_git.sh
 source ~/.envsetup/setup_proj.sh
 
-exec "$SHELL"
-sudo reboot now
+exec zsh
