@@ -95,3 +95,4 @@ source ~/.envsetup/setup_git.sh
 source ~/.envsetup/setup_proj.sh
 
 exec zsh
+sudo reboot now
