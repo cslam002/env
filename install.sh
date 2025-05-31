@@ -1,9 +1,9 @@
-#!/bin/bash
 rm -rf ~/.pyenv
 rm -rf ~/.zprofile
-rm -rf ~/.zshrc*
+rm -rf ~/.zshrc
 rm -rf ~/.oh-my-zsh
 rm -rf ~/erb
+cd ~
 
 sudo apt update
 sudo apt upgrade
@@ -34,19 +34,34 @@ sudo apt install -y \
   pgadmin4
 
 
-echo $SHELL
-chsh -s $(which zsh)
-
-cd ~
-
 # ohmyz : https://ohhmyz.sh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
 
 # powerlevel9k : https://github.com/Powerlevel9k/powerlevel9k
 git clone https://github.com/bhilburn/powerlevel9k.git ~/.oh-my-zsh/custom/themes/powerlevel9k
 
 # hack nerd font : https://www.nerdfonts.com/font-downloads
 # https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/Hack.zip
+FONT_URL="https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/Hack.zip"
+
+
+FONT_DIR="/usr/share/fonts/truetype/hack-nerd"
+
+echo "→ Downloading Hack Nerd Font..."
+wget -q "$FONT_URL" -O /tmp/hack-nerd.zip
+
+echo "→ Extracting fonts..."
+sudo mkdir -p "$FONT_DIR"
+sudo unzip -q /tmp/hack-nerd.zip -d "$FONT_DIR"
+
+echo "→ Updating font cache..."
+sudo fc-cache -fv
+
+echo "→ Cleaning up..."
+rm -f /tmp/hack-nerd.zip
+
+echo "✅ Hack Nerd Font installed to $FONT_DIR"
+
 
 # zsh-syntax-hightlighting : https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/INSTALL.md
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
@@ -56,16 +71,13 @@ git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-m
 
 # pyenv : https://github.com/pyenv/pyenv?tab=readme-ov-file#2-basic-github-checkout
 git clone https://github.com/pyenv/pyenv.git ~/.pyenv
+touch ~/.zprofile
+echo 'export PYENV_ROOT="$HOME/.pyenv"' | tee -a ~/.zshrc >> ~/.zprofile
+echo '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"' | tee -a ~/.zshrc >> ~/.zprofile
+echo 'eval "$(pyenv init - zsh)"' | tee -a ~/.zshrc >> ~/.zprofile
+
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
-echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.zshrc
-echo '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zshrc
-echo 'eval "$(pyenv init - zsh)"' >> ~/.zshrc
-
-echo 'export PYENV_ROOT="$HOME/.pyenv"' > ~/.zprofile
-echo '[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.zprofile
-echo 'eval "$(pyenv init - zsh)"' >> ~/.zprofile
-
 pyenv install 3.10.17
 pyenv install 3.11.12 
 pyenv install 3.12.10
@@ -92,7 +104,9 @@ for new_line in "${replacements[@]}"; do
 done
 
 source ~/.envsetup/setup_git.sh
-source ~/.envsetup/setup_proj.sh
 
-exec zsh
-sudo reboot now
+exec zsh -i -c '
+chsh -s $(which zsh)
+source ~/.envsetup/setup_proj.sh
+loginctl terminate-user $USER
+'

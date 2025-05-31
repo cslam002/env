@@ -2,7 +2,6 @@
 mkdir ~/erb
 cd ~/erb
 pyenv local 3.10.17
-source ~/.zshrc
 
 mkvirtualenv project1
 workon project1
@@ -14,6 +13,7 @@ pip install python-dotenv
 pip install django==5.2
 pip install django-debug-toolbar
 pip install psycopg2
+pip install pillow
 
 django-admin startproject bcre .
 python manage.py startapp pages

@@ -5,9 +5,7 @@ Django Linux Build Environment Setup
 3. Start Installation
    ~/.envsetup/install.sh
 
-Note : When it stop at Oh-My-Zsh, Enter "exit" to continue
-
-Once installation is complete, linux will be restarted.
+Once installation is complete, it has to login again to take effect
 
 source code : '~/erb' is created which contain template of django server and app
 workon virtual environment : project1
