@@ -14,6 +14,7 @@ pip install django==5.2
 pip install django-debug-toolbar
 pip install psycopg2
 pip install pillow
+pip install whitenoise
 
 django-admin startproject bcre .
 python manage.py startapp pages
